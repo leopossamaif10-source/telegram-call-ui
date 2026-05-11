@@ -367,9 +367,13 @@
   function stopShake(){ clearInterval(shakeInt); phone.classList.remove('shake'); }
 
   // Auto-start ringtone on first interaction (browser policy)
-  const tryStartRing = () => { playRingtone(); startShake(); document.removeEventListener('click', tryStartRing); document.removeEventListener('touchstart', tryStartRing); };
-  document.addEventListener('click', tryStartRing, {once:true});
-  document.addEventListener('touchstart', tryStartRing, {once:true});
+  const tryStartRing = () => {
+    document.removeEventListener('click', tryStartRing, true);
+    document.removeEventListener('touchstart', tryStartRing, true);
+    if(screens.incoming.classList.contains('active')) playRingtone();
+  };
+  document.addEventListener('click', tryStartRing, {once:true, capture:true});
+  document.addEventListener('touchstart', tryStartRing, {once:true, capture:true});
   startShake();
 
   // Timer
