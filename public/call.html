@@ -302,7 +302,7 @@
         </div>
         <div class="name" style="margin-top:24px">Chamada encerrada</div>
         <div class="ended-msg" id="endedDuration">Duração: 00:00</div>
-        <button id="restartBtn" style="margin-top:24px;background:rgba(62,196,109,.15);color:var(--green);border:1px solid rgba(62,196,109,.35);padding:10px 22px;border-radius:999px;cursor:pointer;font-size:14px">Reiniciar</button>
+        
       </section>
     </div>
   </div>
@@ -499,9 +499,6 @@
     input.value = '';
   });
 
-  document.getElementById('restartBtn').addEventListener('click', () => {
-    seconds=0; show('incoming'); playRingtone(); startShake();
-  });
 
   // Video source (optional) — supports ?video=URL
   const params = new URLSearchParams(location.search);
