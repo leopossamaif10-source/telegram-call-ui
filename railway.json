@@ -1,0 +1,9 @@
+{
+  "build": {
+    "builder": "NIXPACKS",
+    "buildCommand": "echo ok"
+  },
+  "deploy": {
+    "startCommand": "node bot.js"
+  }
+}
