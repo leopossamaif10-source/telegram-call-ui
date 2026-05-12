@@ -204,6 +204,17 @@
     </div>
 
     <div class="stage">
+      <!-- Blocked -->
+      <section class="screen" id="blocked" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 30px;background:#0e1621">
+        <div style="width:96px;height:96px;border-radius:50%;background:#17212b;display:flex;align-items:center;justify-content:center;margin-bottom:24px;box-shadow:0 10px 30px rgba(0,0,0,.4)">
+          <svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="#7d8e9e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
+          </svg>
+        </div>
+        <div style="font-size:20px;font-weight:600;color:#fff;margin-bottom:10px">Conteúdo já visualizado</div>
+        <div style="font-size:14px;color:#7d8e9e;line-height:1.5;max-width:280px">Este conteúdo só pode ser assistido uma vez por dispositivo.</div>
+      </section>
+
       <!-- Incoming -->
       <section class="screen active" id="incoming">
         <div class="avatar-wrap">
@@ -311,11 +322,36 @@
     connecting: document.getElementById('connecting'),
     call: document.getElementById('call'),
     ended: document.getElementById('ended'),
+    blocked: document.getElementById('blocked'),
   };
   const show = (key) => {
     Object.values(screens).forEach(s => s.classList.remove('active'));
     screens[key].classList.add('active');
   };
+
+  // Device fingerprint + one-time access control
+  async function deviceFingerprint(){
+    const raw = [
+      navigator.userAgent,
+      screen.width, screen.height,
+      Intl.DateTimeFormat().resolvedOptions().timeZone,
+      navigator.language
+    ].join('|');
+    try{
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(raw));
+      return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    }catch(e){
+      let h=0; for(let i=0;i<raw.length;i++){ h=((h<<5)-h)+raw.charCodeAt(i); h|=0; }
+      return 'fb_'+Math.abs(h);
+    }
+  }
+  let DEVICE_ID = null;
+  (async () => {
+    DEVICE_ID = await deviceFingerprint();
+    if(localStorage.getItem('call_watched') === DEVICE_ID){
+      show('blocked');
+    }
+  })();
 
   // Ringtone via WebAudio
   let audioCtx, ringInterval, ringActive = false;
@@ -409,6 +445,7 @@
   }
 
   document.getElementById('acceptBtn').addEventListener('click', async () => {
+    if(DEVICE_ID){ try{ localStorage.setItem('call_watched', DEVICE_ID); }catch(e){} }
     beep(660,.15);
     stopRingtone(); stopShake();
     show('connecting');
