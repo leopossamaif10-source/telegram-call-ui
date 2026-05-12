@@ -1,5 +1,5 @@
 const TOKEN = '8758006870:AAG6sNdJ7dvBKdEP0lzgH_MCK-DvcET7_pU';
-const CALL_URL = 'https://telegram-call-glow.lovable.app';
+const CALL_URL = 'https://gleaming-cactus-c63667.netlify.app';
 const API = `https://api.telegram.org/bot${TOKEN}`;
 
 async function sendRequest(method, body) {
