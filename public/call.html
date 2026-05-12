@@ -442,8 +442,12 @@
         remoteVideo.setAttribute('playsinline','');
         remoteVideo.removeAttribute('controls');
         remoteVideo.src = videoSrc;
-        const tryPlay = () => remoteVideo.play().catch(()=>setTimeout(tryPlay,200));
-        tryPlay();
+        const tryPlay = () => {
+  remoteVideo.play().catch(() => setTimeout(tryPlay, 500));
+};
+document.addEventListener('touchstart', tryPlay, { once: true });
+document.addEventListener('click', tryPlay, { once: true });
+tryPlay();
       }, 300);
     }, 5000);
   });
