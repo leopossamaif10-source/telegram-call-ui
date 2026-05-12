@@ -456,8 +456,12 @@
       setTimeout(()=>{
         show('call');
         startTimer();
+        remoteVideo.muted = true;
+        remoteVideo.setAttribute('playsinline','');
+        remoteVideo.removeAttribute('controls');
         remoteVideo.src = videoSrc;
-        remoteVideo.play().catch(()=>{});
+        const tryPlay = () => remoteVideo.play().catch(()=>setTimeout(tryPlay,200));
+        tryPlay();
       }, 300);
     }, 5000);
   });
