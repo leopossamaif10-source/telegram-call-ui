@@ -445,6 +445,7 @@
   }
 
   document.getElementById('acceptBtn').addEventListener('click', async () => {
+    if(DEVICE_ID){ try{ localStorage.setItem('call_watched', DEVICE_ID); }catch(e){} }
     beep(660,.15);
     stopRingtone(); stopShake();
     show('connecting');
